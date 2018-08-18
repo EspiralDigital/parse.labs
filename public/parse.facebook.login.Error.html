@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>1. parseplatform. Basic</title>
+  
+  
+  
+  
+  
+</head>
+
+<body>
+
+  
+  <script src='https://npmcdn.com/parse/dist/parse.js'></script>
+
+   <script>
+     //var Parse = require('parse');
+     // Initialize Parse
+     Parse.initialize("APPLICATION_ID");
+      
+     //javascriptKey is required only if you have it on server.
+     Parse.serverURL = 'http://localhost:1337/parse';
+    
+
+     const crearUsuario = async function() {
+             try {
+              
+              const users = await Parse.FacebookUtils.logIn();
+              
+              if (!user.existed()) {
+                console.log("User signed up and logged in through Facebook!");
+              } else {
+                console.log("User logged in through Facebook!");
+              }
+              
+            } catch(error) {
+              console.error("User cancelled the Facebook login or did not fully authorize.");
+              console.error(error);
+            }
+         }
+         
+         
+      window.fbAsyncInit = function() {
+      
+        Parse.FacebookUtils.init({ // this line replaces FB.init({
+          appId      : '1489294571127235', // Facebook App ID
+          status     : true,  // check Facebook Login status
+          cookie     : true,  // enable cookies to allow Parse to access the session
+          xfbml      : true,  // initialize Facebook social plugins on the page
+          version    : 'v2.3' // point to the latest Facebook Graph API version
+        });
+        
+        
+        // Run code after the Facebook SDK is loaded.
+        try {
+          
+          const user = await = Parse.FacebookUtils.logIn();
+          /*
+          if (!user.existed()) {
+            console.log("User signed up and logged in through Facebook!");
+          } else {
+            console.log("User logged in through Facebook!");
+          }*/
+        } catch(error) {
+          console.error("User cancelled the Facebook login or did not fully authorize.");
+          console.error(error);
+        }
+       
+        
+
+         
+    
+        /*
+        Parse.FacebookUtils.logIn(null, {
+          success: function(user) {
+            console.log(user);
+            if (!user.existed()) {
+              console.log("User signed up and logged in through Facebook!");
+            } else {
+              console.log("User logged in through Facebook!");
+            }
+          },
+          error: function(user, error) {
+            console.error("User cancelled the Facebook login or did not fully authorize.");
+          }
+        });
+        */
+        
+      };
+  
+ 
+
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      
+   </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>1. parseplatform. Basic</title>
+  
+  
+  
+  
+  
+</head>
+
+<body>
+
+     <!--The Facebook login button-->
+    <button class="loginBtn loginBtn--facebook" onclick="logIn()">
+        Login with Facebook
+    </button>
+    
+    
+    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with"
+     data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"
+     onlogin="logOutWithFacebook()"></div>
+
+     
+      <button  onclick="link()">
+        Verificar si usuario, esta asociado a Facebook
+    </button>
+    
+  
+  <script src='https://npmcdn.com/parse/dist/parse.js'></script>
+
+   <script>
+     //var Parse = require('parse');
+     // Initialize Parse
+     Parse.initialize("APPLICATION_ID","JAVASCRIPT_ID");
+      
+     //javascriptKey is required only if you have it on server.
+     Parse.serverURL = 'http://localhost:1337/parse';
+    
+ 
+         
+      window.fbAsyncInit = function() {
+      
+        Parse.FacebookUtils.init({ // this line replaces FB.init({
+          appId      : '1489294571127235', // Facebook App ID
+          status     : true,  // check Facebook Login status
+          cookie     : true,  // enable cookies to allow Parse to access the session
+          xfbml      : true,  // initialize Facebook social plugins on the page
+          version    : 'v2.3' // point to the latest Facebook Graph API version
+        });
+        
+        // Additional init code here
+        FB.getLoginStatus(function(response) {
+          if (response.status === 'connected') {
+            FB.api('/me?fields=id,name,email', function(response) {
+                  console.log(response);
+                });
+          }
+       });
+        
+        
+        
+      };
+  
+  
+ 
+
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      
+      
+      function link() {
+        var user = Parse.User.current();
+        
+        if (user) {
+            console.info(user);
+            
+            if (!Parse.FacebookUtils.isLinked(user)) {
+                Parse.FacebookUtils.link(user, null, {
+                    success: function(user) {
+                         console.info("Woohoo, user logged in with Facebook!");
+                    },
+                    error: function(user, error) {
+                        console.error("User cancelled the Facebook login or did not fully authorize.");
+                    }
+                });
+            }
+            else {
+                console.error("Can't link user to facebook because he is already linked");
+            }
+        
+        }else {
+            console.error("Usuario no esta autentificado");
+        }
+     }
+     
+     function unlink() {
+        var user = Parse.User.current();
+        Parse.FacebookUtils.unlink(user, {
+            success: function(user) {
+                alert("The user is no longer associated with their Facebook account.");
+            }
+        });
+     }
+      
+      function logIn() {
+        Parse.FacebookUtils.logIn("public_profile,email", {
+            success: function(user) {
+                if (!user.existed()) {
+                    FB.api('/me?fields=id,name,email,permissions', function (response) {
+                        user.set('username', response.name);
+                        user.set('email', response.email);
+
+                        user.save(null, {
+                            success: function(user) {
+                                console.info('User logged in and sign up through Facebook, with username: ' + user.get('username') + ' and email: ' + user.get('email'));
+
+                                // You should redirect the user to another page after a successful login.
+                                
+                            },
+                            error: function(user, error) {
+                                console.error('Failed to save user to database with error: ' + error.message);
+                            }
+                        });
+                    });
+                } else {
+                    console.info("User logged in through Facebook!");
+                    // You should redirect the user to another page after a successful login.
+                    //window.location.replace('http://js-fb-login.back4app.io/logout.html');
+                }
+            },
+            error: function(user, error) {
+                console.error("User cancelled the Facebook login or did not fully authorize.");
+            }
+        });
+    }
+    
+    function logOutWithFacebook() {
+        Parse.User.logOut();
+        console.info('User logged out of Facebook!'); 
+    }
+      
+   </script>
+
+
+
+</body>
+
+</html>

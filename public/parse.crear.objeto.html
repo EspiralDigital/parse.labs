@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>1. parseplatform. Basic</title>
+  
+  
+  
+  
+  
+</head>
+
+<body>
+
+ <div id="salida"></div>
+ 
+  <script src='https://npmcdn.com/parse/dist/parse.js'></script>
+
+   <script>
+     //var Parse = require('parse');
+     // Initialize Parse
+     Parse.initialize("APPLICATION_ID");
+      
+     //javascriptKey is required only if you have it on server.
+     Parse.serverURL = 'http://localhost:1337/parse';
+     
+  
+ 
+    
+    const GameScore = Parse.Object.extend("GameScore");
+    const gameScore = new GameScore();
+
+    gameScore.set("score", 1337);
+    gameScore.set("playerName", "Sean Plott");
+    gameScore.set("cheatMode", false);
+
+    gameScore.save()
+    .then((gameScore) => {
+      // Execute any logic that should take place after the object is saved.
+      console.info('New object created with objectId: ' + gameScore.id);
+      
+      document.getElementById("salida").innerHTML = 'New object created with objectId: ' + gameScore.id;
+      
+    }, (error) => {
+      // Execute any logic that should take place if the save fails.
+      // error is a Parse.Error with an error code and message.
+      console.error('Failed to create new object, with error code: ' + error.message);
+    });
+   
+    
+
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      
+   </script>
+
+
+
+</body>
+
+</html>
